@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HTML Media Capture Examples</title>
+    <link rel="stylesheet" href="base.css">
+</head>
+<body>
+<h1>HTML Media Capture Examples</h1>
+
+<pre>&lt;input type="file"&gt;</pre>
+<p style="font-size: 12px;">高版本：显示文件管理(音频，图片，视频)、相机、录像机、录音机</p>
+<p style="font-size: 12px;">低版本：显示文件管理(图片，视频)、相机、录像机</p>
+<input type="file">
+
+<pre>&lt;input type="file" accept="image/*"&gt;</pre>
+<p style="font-size: 12px;">显示文件管理(图片)、相机</p>
+<input type="file" accept="image/*">
+
+<pre>&lt;input type="file" accept="video/*"&gt;</pre>
+<p style="font-size: 12px;">显示文件管理(视频)、摄像机</p>
+<input type="file" accept="video/*">
+
+<pre>&lt;input type="file" accept="audio/*"&gt;</pre>
+<p style="font-size: 12px;">高版本：显示文件管理(音频)、录音机</p>
+<p style="font-size: 12px;">低版本：显示文件管理(视频)、摄像机</p>
+<input type="file" accept="audio/*">
+
+<pre>&lt;input type="file" accept="*/*"&gt;</pre>
+<p style="font-size: 12px;">高版本：显示文件管理(音频，图片，视频)、相机、录像机、录音机</p>
+<p style="font-size: 12px;">低版本：显示文件管理(图片，视频)、相机、录像机</p>
+<input type="file" accept="*/*">
+
+<pre>&lt;input type="file" accept="image/*,video/*"&gt;</pre>
+<p style="font-size: 12px;">显示文件管理(图片，视频)、相机、录像机</p>
+<input type="file" accept="image/*,video/*">
+
+<pre>&lt;input type="file" accept="image/*,audio/*"&gt;</pre>
+<p style="font-size: 12px;">高版本：显示文件管理(图片，音频)、相机、录音机</p>
+<p style="font-size: 12px;">低版本：显示文件管理(图片，视频)、相机、摄像机</p>
+<input type="file" accept="image/*,audio/*">
+
+<pre>&lt;input type="file" accept="image/*,video/*,audio/*"&gt;</pre>
+<p style="font-size: 12px;">高版本：显示文件管理(音频，图片，视频)、相机、录像机、录音机</p>
+<p style="font-size: 12px;">低版本：显示文件管理(图片，视频)、相机、录像机</p>
+<input type="file" accept="image/*,video/*,audio/*">
+
+<pre>&lt;input type="file" accept="image/*,video/*" capture&gt;</pre>
+<p style="font-size: 12px;">高版本：显示相机、录像机</p>
+<p style="font-size: 12px;">低版本：显示文件管理(图片，视频)、相机、录像机</p>
+<input type="file" accept="image/*,video/*" capture>
+
+<pre>&lt;input type="file" accept="image/*" capture="camera"&gt;</pre>
+<p style="font-size: 12px;">高版本：打开相机</p>
+<p style="font-size: 12px;">低版本：显示文件管理(图片)、相机</p>
+<input type="file" accept="image/*" capture="camera">
+
+<pre>&lt;input type="file" accept="image/*" capture multiple&gt;</pre>
+<p style="font-size: 12px;">高版本：打开相机</p>
+<p style="font-size: 12px;">低版本：显示文件管理(图片)【获取一张】、相机</p>
+<input type="file" accept="image/*" capture multiple>
+
+<pre>&lt;input type="file" accept="image/*" multiple&gt;</pre>
+<p style="font-size: 12px;">高版本：显示文件管理(图片)【可获取多张】、相机</p>
+<p style="font-size: 12px;">低版本：显示文件管理(图片)【获取一张】、相机</p>
+<input type="file" accept="image/*" multiple>
+
+<pre>&lt;input type="file" accept="image/png"&gt;</pre>
+<p style="font-size: 12px;">高版本：显示文件管理(png图片)、相机</p>
+<p style="font-size: 12px;">低版本：显示文件管理(png图片)、相机</p>
+<input type="file" accept="image/png">
+
+<pre>&lt;input type="file" accept="image/png"&gt;</pre>
+<p style="font-size: 12px;">高版本：显示文件管理(png图片)、相机(png图片)</p>
+<p style="font-size: 12px;">低版本：显示文件管理(png图片)、相机(png图片)</p>
+<input type="file" accept="image/png">
+
+<pre>&lt;input type="file" accept="application/zip"&gt;</pre>
+<p style="font-size: 12px;">高版本：打开文件管理(zip文件)</p>
+<p style="font-size: 12px;">低版本：???????????????显示文件管理(png图片)、相机(png图片)</p>
+<input type="file" accept="application/zip">
+
+<script>
+
+// test for @capture existence
+
+function supported(attribute) {
+  var i = document.createElement('input');
+  i.setAttribute(attribute, true);
+  return !!i[attribute];
+}
+
+document.querySelector('#supported').innerHTML =
+  'It appears <strong>@capture is ' + (supported('capture') ? 'supported' : 'not supported') +
+  '</strong> and <strong>@accept is ' + (supported('accept') ? 'supported' : 'not supported') + '</strong>.';
+
+// examples from the spec
+
+//var input = document.querySelector('input[type=file]');
+var input = document.querySelector('#example4');
+
+input.onchange = function () {
+  var file = input.files[0];
+  
+  // upload(file);
+  drawOnCanvas(file);
+  displayAsImage(file);
+};
+
+function upload(file) {
+  var form = new FormData(),
+      xhr = new XMLHttpRequest();
+  
+  form.append('image', file);
+  xhr.open('post', 'server.php', true);
+  xhr.send(form);
+}
+
+function drawOnCanvas(file) {
+  var reader = new FileReader(),
+      c = document.createElement('canvas');
+
+  document.body.appendChild(c);
+
+  reader.onload = function (e) {
+    var dataURL = e.target.result,
+        c = document.querySelector('canvas'),
+        ctx = c.getContext('2d'),
+        img = new Image();
+        
+    img.onload = function() {
+      c.width = img.width;
+      c.height = img.height;
+      ctx.drawImage(img, 0, 0);
+    };
+    
+    img.src = dataURL;
+  };
+  
+  reader.readAsDataURL(file);
+}
+
+function displayAsImage(file) {
+  var imgURL = URL.createObjectURL(file),
+      img = document.createElement('img');
+  
+  img.onload = function() {
+    URL.revokeObjectURL(imgURL);
+  };
+  
+  img.src = imgURL;
+  document.body.appendChild(img);
+}
+
+</script>
+</body>
+</html>
